@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'LinkTree Clone' %></title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .link-card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .link-card:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <!-- Profile Header -->
+        <div class="text-center mb-8">
+            <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-user text-4xl text-gray-400"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800 mb-2"><%= title %></h1>
+            <p class="text-gray-600"><%= description %></p>
+        </div>
+
+        <!-- Links Container -->
+        <div class="space-y-4">
+            <% if (links && links.length > 0) { %>
+                <% links.forEach(link => { %>
+                    <a href="<%= link.url %>" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="link-card block w-full p-4 bg-white rounded-lg shadow-sm hover:shadow-md border border-gray-100 text-center transition-all duration-200">
+                        <div class="flex items-center justify-center space-x-3">
+                            <% if (link.icon) { %>
+                                <i class="<%= link.icon %> text-primary"></i>
+                            <% } %>
+                            <span class="font-medium text-gray-700"><%= link.title %></span>
+                        </div>
+                    </a>
+                <% }); %>
+            <% } else { %>
+                <div class="text-center text-gray-500 py-8">
+                    <p>No links available yet.</p>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Admin Link (only visible to logged-in admins) -->
+        <% if (typeof isAdmin !== 'undefined' && isAdmin) { %>
+            <div class="mt-8 text-center">
+                <a href="/admin/dashboard" 
+                   class="text-sm text-gray-500 hover:text-primary">
+                    Manage Links
+                </a>
+            </div>
+        <% } %>
+    </div>
+
+    <footer class="text-center text-gray-500 text-sm py-4">
+        <p>&copy; <%= new Date().getFullYear() %> LinkTree Clone. All rights reserved.</p>
+    </footer>
+
+    <!-- Optional JavaScript for link click tracking -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.link-card');
+        links.forEach(link => {
+            link.addEventListener('click', async (e) => {
+                const linkId = link.dataset.id;
+                if (linkId) {
+                    try {
+                        await fetch(`/click/${linkId}`, { 
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                    } catch (error) {
+                        console.error('Error tracking click:', error);
+                    }
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
