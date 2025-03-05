@@ -17,7 +17,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background-color: <%= backgroundColor || '#f8fafc' %>; /* Dynamic background color */
         }
         .link-card {
             transition: transform 0.2s ease-in-out;
@@ -32,7 +32,7 @@
         <!-- Profile Header -->
         <div class="text-center mb-8">
             <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-200 flex items-center justify-center">
-                <i class="fas fa-user text-4xl text-gray-400"></i>
+                <img src="<%= profileImage || 'default-profile.png' %>" alt="Profile" class="rounded-full w-full h-full object-cover"> <!-- Dynamic profile image -->
             </div>
             <h1 class="text-2xl font-bold text-gray-800 mb-2"><%= title %></h1>
             <p class="text-gray-600"><%= description %></p>
@@ -42,17 +42,17 @@
         <div class="space-y-4">
             <% if (links && links.length > 0) { %>
                 <% links.forEach(link => { %>
-                    <a href="<%= link.url %>" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       class="link-card block w-full p-4 bg-white rounded-lg shadow-sm hover:shadow-md border border-gray-100 text-center transition-all duration-200">
+                    <div class="link-card block w-full p-4 rounded-lg shadow-sm hover:shadow-md border border-gray-100 text-center transition-all duration-200" style="background-color: <%= link.backgroundColor || '#f8fafc' %>;">
                         <div class="flex items-center justify-center space-x-3">
                             <% if (link.icon) { %>
                                 <i class="<%= link.icon %> text-primary"></i>
                             <% } %>
                             <span class="font-medium text-gray-700"><%= link.title %></span>
                         </div>
-                    </a>
+                        <div class="mt-2">
+                            <button class="text-blue-500 hover:underline" onclick="editLink(<%= link.id %>)">Edit</button>
+                        </div>
+                    </div>
                 <% }); %>
             <% } else { %>
                 <div class="text-center text-gray-500 py-8">
@@ -76,26 +76,12 @@
         <p>&copy; <%= new Date().getFullYear() %> LinkTree Clone. All rights reserved.</p>
     </footer>
 
-    <!-- Optional JavaScript for link click tracking -->
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const links = document.querySelectorAll('.link-card');
-        links.forEach(link => {
-            link.addEventListener('click', async (e) => {
-                const linkId = link.dataset.id;
-                if (linkId) {
-                    try {
-                        await fetch(`/click/${linkId}`, { 
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
-                        });
-                    } catch (error) {
-                        console.error('Error tracking click:', error);
-                    }
-                }
-            });
-        });
-    });
+    function editLink(linkId) {
+        // Logic to open a modal or redirect to an edit page
+        // This can be implemented to show a form for editing the link details
+        alert('Edit link with ID: ' + linkId);
+    }
     </script>
 </body>
 </html>
