@@ -33,7 +33,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background-color: <%= backgroundColor || '#f8fafc' %>; /* Dynamic background color */
         }
         .link-card {
             transition: transform 0.2s ease-in-out;
@@ -43,7 +43,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen dynamic-background" id="dynamicBackground">
     <%- content %>
     
     <footer class="text-center text-gray-500 text-sm py-4">
