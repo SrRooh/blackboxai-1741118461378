@@ -32,6 +32,11 @@ module.exports = (sequelize) => {
       allowNull: false,
       defaultValue: 0
     },
+    backgroundColor: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: '#f8fafc' // Default background color
+    },
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
